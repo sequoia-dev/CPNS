@@ -18,7 +18,6 @@ def ctilde(x):
     """
     
     c = np.maximum(0,np.exp(-(x-0.2)**2/0.005 - 1 ))
-    
     return c
 
 
@@ -26,10 +25,12 @@ def ctilde(x):
 
 if __name__ == '__main__':
     
+    plt.close('all')
     n = 150
     tmax = 1
-    v = -1
-    m = int(n*tmax)
+    v = 1
+    coeff = 1 #dt = coeff * dx
+    m = int(n*tmax/coeff)
     
     dx = 1/n
     dt = tmax/m
@@ -38,20 +39,20 @@ if __name__ == '__main__':
     c = ctilde(x)
     t = 0
     
+    line , = plt.plot(x,c,label=r'$c(0,x)$')
+    plt.legend('upper right')
+    
     plt.grid()
     plt.title('Évolution de c(t,x) pour différents temps')
     plt.xlabel('x')
     plt.ylabel('c(t,x)')
     
-    for i in range(m):
+    for k in range(m):
 
         c = c - v * (dt/dx) * (c - np.roll(c,+1))
         t += dt
-        if i == 0:
-            line, = plt.plot(x,c)
-        else:
-            line.set_ydata(c)
-            line.set_label(r'$c({:.2f},x)$'.format(t))
+        line.set_ydata(c)
+        line.set_label(r'$c({:.2f},x)$'.format(t))
         plt.pause(dt)
         plt.legend(loc='upper right')
         
